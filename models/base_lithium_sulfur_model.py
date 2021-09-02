@@ -73,7 +73,9 @@ class BaseModel(pybamm.BaseModel):
 
     @options.setter
     def options(self, extra_options):
-        default_options = {"operating mode": "current"}
+        default_options = {"operating mode": "current",
+                          "degradation" : "none",
+                          "thermal" : "none"}
         extra_options = extra_options or {}
 
         options = pybamm.FuzzyDict(default_options)

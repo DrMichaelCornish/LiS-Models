@@ -35,7 +35,7 @@ class ZeroD_Marinescu_type(BaseModel):
             Storage, 21 (2019), 765-772.
     """
 
-    def __init__(self, options=None, name="Zero Dimensional Marinescu Type"):
+    def __init__(self, options=None, name="Marinescu-type Zero Dimensional Model"):
         super().__init__(options, name)
         
         # citations
@@ -72,6 +72,9 @@ class ZeroD_Marinescu_type(BaseModel):
         # Model parameters as defined in table (1) in [1]. Parameters with 'H' or
         # 'L' in the name represent the high and low plateau parameter, respectively.
         #######################################
+        from .parameters.marinescu_type_parameters import MarinescuTypeParameters
+        self.param = MarinescuTypeParameters()
+        param = self.param
         param = self.param
 
         # standard parameters
@@ -193,6 +196,8 @@ class ZeroD_Marinescu_type(BaseModel):
         self.variables.update(
             {
                 "Time [s]": pybamm.t * self.timescale,
+                "Capacity [Ah]": pybamm.t * self.timescale * pybamm.AbsoluteValue(I) / 3600,
+                "S8 [g]": S8,
                 "S8 [g]": S8,
                 "S4 [g]": S4,
                 "S2 [g]": S2,
@@ -258,8 +263,15 @@ class ZeroD_Marinescu_type(BaseModel):
                 pybamm.EventType.TERMINATION,
             )
         )
-        self.events.append(
-            pybamm.Event(
-                "Zero theoretical capacity", cth - tol, pybamm.EventType.TERMINATION
-            )
-        )
+        #self.events.append(
+            #pybamm.Event(
+                #"Zero theoretical capacity", cth - tol, pybamm.EventType.TERMINATION
+            #)
+        #)
+    @property
+    def default_parameter_values(self):
+        # TODO: separate parameters out by component and create a parameter set
+        # that can be called (see pybamm/parameters/parameter_sets.py)
+        file = "models/inputs/parameters/lithium-sulfur/marinescu_type_parameters.csv"
+        values_path = pybamm.get_parameters_filepath(file)
+        return pybamm.ParameterValues(values=values_path)
