@@ -2,7 +2,7 @@ import pybamm
 from .base_lithium_sulfur_model import BaseModel
 
 
-class ZeroD_Cornish_type(BaseModel):
+class Cornish2021(BaseModel):
     """
     Zero Dimensional with Chemistry 4
     
@@ -18,7 +18,7 @@ class ZeroD_Cornish_type(BaseModel):
         The name of the model.
     """
 
-    def __init__(self, options=None, name="Cornish-type  Zero Dimensional Model"):
+    def __init__(self, options=None, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
         super().__init__(options, name)
         
         # citations
@@ -40,8 +40,8 @@ class ZeroD_Cornish_type(BaseModel):
         #######################################
         # Model parameters
         #######################################
-        from .parameters.cornish_type_parameters import CornishTypeParameters
-        self.param = CornishTypeParameters()
+        from .parameters.cornish2021_parameters import Cornish2021Parameters
+        self.param = Cornish2021Parameters()
         param = self.param
 
         # standard parameters
@@ -220,6 +220,6 @@ class ZeroD_Cornish_type(BaseModel):
     def default_parameter_values(self):
         # TODO: separate parameters out by component and create a parameter set
         # that can be called (see pybamm/parameters/parameter_sets.py)
-        file = "models/inputs/parameters/lithium-sulfur/cornish_type_parameters.csv"
+        file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
         values_path = pybamm.get_parameters_filepath(file)
         return pybamm.ParameterValues(values=values_path)
