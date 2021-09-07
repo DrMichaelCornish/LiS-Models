@@ -24,9 +24,6 @@ We have implmented several published models. To run a model from a specific cita
 |  Hua et al. (2019) | examples/run_hua2019.ipynb   | Coming soon!    |
 |  Cornish & Marinescu (2021) | examples/run_cornish2021.ipynb   | Coming soon!    |
 
-See examples/run_marinescu_type_models.ipynb for zero dimensional models based on the chemistry used in Hua et al. (2019), Marinescu et al. (2018), and Marinescu et al. (2016).
-Alternatively, check out the YouTube video <here> [link coming soon!]
-
 # How to use the various solvers
 See examples/solvers.ipynb
 Alternatively, check out the YouTube video <here> [link coming soon!]
