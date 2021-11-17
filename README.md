@@ -15,11 +15,14 @@ Coming Soon
 Coming soon!
 
 # How to run a model
-See examples/run_cornish_type_models.ipynb for zero dimensional model based on the Cornish & Marinescu (2021) chemistry. 
-Alternatively, check out the YouTube video <here> [link coming soon!]
+We have implmented several published models. To run a model from a specific citation, please refer to either the example notebooks or YouTube tutorial videos given in the following table:
 
-See examples/run_marinescu_type_models.ipynb for zero dimensional models based on the chemistry used in Hua et al. (2019), Marinescu et al. (2018), and Marinescu et al. (2016).
-Alternatively, check out the YouTube video <here> [link coming soon!]
+| Model Citation       | Example Notebook     | YouTube Tutorial     |
+| :------------- | :----------: | -----------: |
+|  Marinescu et al. (2016) | examples/run_marinescu2016.ipynb   | Coming soon!    |
+|  Marinescu et al. (2018) | examples/run_marinescu2018.ipynb   | Coming soon!    |
+|  Hua et al. (2019) | examples/run_hua2019.ipynb   | Coming soon!    |
+|  Cornish & Marinescu (2021) | examples/run_cornish2021.ipynb   | Coming soon!    |
 
 # How to use the various solvers
 See examples/solvers.ipynb

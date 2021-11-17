@@ -2,7 +2,7 @@ import pybamm
 from .base_lithium_sulfur_model import BaseModel
 
 
-class ZeroD_Cornish_type(BaseModel):
+class Cornish2021(BaseModel):
     """
     Zero Dimensional with Chemistry 4
     
@@ -18,7 +18,7 @@ class ZeroD_Cornish_type(BaseModel):
         The name of the model.
     """
 
-    def __init__(self, options=None, name="Zero Dimensional Model with Chemistry 4"):
+    def __init__(self, options=None, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
         super().__init__(options, name)
         
         # citations
@@ -40,6 +40,8 @@ class ZeroD_Cornish_type(BaseModel):
         #######################################
         # Model parameters
         #######################################
+        from .parameters.cornish2021_parameters import Cornish2021Parameters
+        self.param = Cornish2021Parameters()
         param = self.param
 
         # standard parameters
@@ -47,7 +49,7 @@ class ZeroD_Cornish_type(BaseModel):
         F = param.F
         T = param.T_ref
 
-        # model-specific known parameters
+        # parameters
         Ms = param.Ms
         ns = param.ns
         ns2 = param.ns2
@@ -61,8 +63,6 @@ class ZeroD_Cornish_type(BaseModel):
         EH0 = param.EH0
         EM0 = param.EM0
         EL0 = param.EL0
-
-        # model-specific unknown parameters
         v = param.v
         ar = param.ar
         k_p = param.k_p
@@ -70,6 +70,8 @@ class ZeroD_Cornish_type(BaseModel):
         k_s_charge = param.k_s_charge
         k_s_discharge = param.k_s_discharge
         
+        
+        # parameters derived from other parameters
         nH = 1
         nM = 1
         nL = 1
@@ -150,6 +152,7 @@ class ZeroD_Cornish_type(BaseModel):
         self.variables.update(
             {
                 "Time [s]": pybamm.t * self.timescale,
+                "Capacity [Ah]": pybamm.t * self.timescale * pybamm.AbsoluteValue(I) / 3600,
                 "S8 [g]": S8,
                 "S4 [g]": S4,
                 "S2 [g]": S2,
@@ -212,3 +215,11 @@ class ZeroD_Cornish_type(BaseModel):
         #        "Zero theoretical capacity", cth - tol, pybamm.EventType.TERMINATION
         #    )
         #)
+        
+    @property
+    def default_parameter_values(self):
+        # TODO: separate parameters out by component and create a parameter set
+        # that can be called (see pybamm/parameters/parameter_sets.py)
+        file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
+        values_path = pybamm.get_parameters_filepath(file)
+        return pybamm.ParameterValues(values=values_path)
