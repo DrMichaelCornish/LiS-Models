@@ -4,7 +4,7 @@ from .base_lithium_sulfur_model import BaseModel
 
 class Cornish2021(BaseModel):
     """
-    Zero Dimensional with Chemistry 4
+    Zero Dimensional with the following electrochemistry
     
     S_{8}^{0} + 4e^{-} => 2 S_{4}^{2-}
     S_{4}^{2-} + 2e^{-} => 2S_{2}^{2-}
@@ -18,7 +18,7 @@ class Cornish2021(BaseModel):
         The name of the model.
     """
 
-    def __init__(self, options=None, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
+    def __init__(self, options = None, temp_control = 30, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
         super().__init__(options, name)
         
         # citations
@@ -66,6 +66,7 @@ class Cornish2021(BaseModel):
         v = param.v
         ar = param.ar
         k_p = param.k_p
+        k_d = param.k_d
         S_star = param.S_star
         k_s_charge = param.k_s_charge
         k_s_discharge = param.k_s_discharge
@@ -119,7 +120,9 @@ class Cornish2021(BaseModel):
         # Shuttle coefficient
         k_s = ( k_s_charge * (I < 0) ) + ( k_s_discharge * (I >= 0) )
         
-
+        # Precipitation/Dissolution rate
+        k_pd = ( k_d * (I < 0) ) + ( k_p * (I >= 0) )
+        
         ###################################
         # Dynamic model functions
         ###################################
@@ -141,7 +144,7 @@ class Cornish2021(BaseModel):
         dSdt = (ns2 * Ms * i_L / (nM * F)) - k_p * Sp * (S - S_star) / (v * rho_s)
 
         # Differential equation (8e) in [1]
-        dSpdt = k_p * Sp * (S - S_star) / (v * rho_s)
+        dSpdt = k_pd * Sp * (S - S_star) / (v * rho_s)
 
         self.rhs.update({S8: dS8dt, S4: dS4dt, S2: dS2dt, S: dSdt, Sp: dSpdt})
 
@@ -210,16 +213,21 @@ class Cornish2021(BaseModel):
                 pybamm.EventType.TERMINATION,
             )
         )
-        #self.events.append(
-        #    pybamm.Event(
-        #        "Zero theoretical capacity", cth - tol, pybamm.EventType.TERMINATION
-        #    )
-        #)
         
+        
+        self.temp_control = temp_control
     @property
     def default_parameter_values(self):
-        # TODO: separate parameters out by component and create a parameter set
-        # that can be called (see pybamm/parameters/parameter_sets.py)
-        file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
+        
+        if self.temp_control == 20:
+            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_20.csv"
+        elif self.temp_control == 30:
+            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_30.csv"
+        elif self.temp_control == 40:
+            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_40.csv"
+        else:
+            print('No defined standard parameter set for temperature control value of {} [C]'.format(temp_control))
+            
+        #file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
         values_path = pybamm.get_parameters_filepath(file)
         return pybamm.ParameterValues(values=values_path)

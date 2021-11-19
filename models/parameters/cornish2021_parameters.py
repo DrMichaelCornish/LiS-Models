@@ -50,6 +50,7 @@ class Cornish2021Parameters:
         self.v = pybamm.Parameter("Electrolyte volume per cell [L]")
         self.ar = pybamm.Parameter("Active reaction area per cell [m2]")
         self.k_p = pybamm.Parameter("Precipitation rate [s-1]")
+        self.k_d = pybamm.Parameter("Dissolution rate [s-1]")
         self.S_star = pybamm.Parameter("S saturation mass [g]")
         self.k_s_charge = pybamm.Parameter(
             "Shuttle rate coefficient during charge [s-1]"
