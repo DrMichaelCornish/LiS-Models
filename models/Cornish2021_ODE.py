@@ -2,7 +2,7 @@ import pybamm
 from .base_lithium_sulfur_model import BaseModel
 
 
-class Cornish2021(BaseModel):
+class Cornish2021_ODE(BaseModel):
     """
     Zero Dimensional with the following electrochemistry
     
@@ -128,8 +128,8 @@ class Cornish2021(BaseModel):
         ###################################
 
         # Algebraic constraint on currents as defined by equation (7) in [1]
-        algebraic_condition = i_H + i_M + i_L - I
-        self.algebraic.update({V: algebraic_condition})
+        #algebraic_condition = i_H + i_M + i_L - I
+        #self.algebraic.update({V: algebraic_condition})
 
         # Differential equation (8a) in [1]
         dS8dt = -(ns8 * Ms * i_H / (nH * F)) - k_s * S8
@@ -147,6 +147,18 @@ class Cornish2021(BaseModel):
         dSpdt = k_pd * Sp * (S - S_star) / (v * rho_s)
 
         self.rhs.update({S8: dS8dt, S4: dS4dt, S2: dS2dt, S: dSdt, Sp: dSpdt})
+        
+        
+        numerator_H = -ih0*pybamm.cosh(iH_coef * eta_H)*( (dS8dt/S8) - 2*(dS4dt/S4) )
+        numerator_M = -im0*pybamm.cosh(iM_coef * eta_M)*( (dS4dt/S4) - 2*(dS2dt/S2) )
+        numerator_L = -il0*pybamm.cosh(iL_coef * eta_L)*( (dS2dt/S2) - 2*(dSdt/S) )
+        
+        denominator_H = nH*ih0*pybamm.cosh(iH_coef * eta_H)
+        denominator_M = nM*im0*pybamm.cosh(iM_coef * eta_M)
+        denominator_L = nL*il0*pybamm.cosh(iL_coef * eta_L)
+        
+        dVdt = ( numerator_H + numerator_M + numerator_L )/(denominator_H + denominator_M + denominator_L)
+        self.rhs.update({V:dVdt})
 
         ##############################
         # Model variables
@@ -172,7 +184,6 @@ class Cornish2021(BaseModel):
                 "Middle plateau current [A]": i_M,
                 "Low plateau current [A]": i_L,
                 "Theoretical capacity [Ah]": cth,
-                "Algebraic condition": algebraic_condition,
             }
         )
 

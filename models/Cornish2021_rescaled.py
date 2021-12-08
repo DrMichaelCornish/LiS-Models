@@ -2,7 +2,7 @@ import pybamm
 from .base_lithium_sulfur_model import BaseModel
 
 
-class Cornish2021(BaseModel):
+class Cornish2021_rescaled(BaseModel):
     """
     Zero Dimensional with the following electrochemistry
     
@@ -20,7 +20,9 @@ class Cornish2021(BaseModel):
 
     def __init__(self, options = None, temp_control = 30, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
         super().__init__(options, name)
-        
+        from .parameters.cornish2021_parameters import Cornish2021Parameters
+        self.param = Cornish2021Parameters()
+        param = self.param
         # citations
         #pybamm.citations.register("Cornish2021")
         
@@ -31,18 +33,22 @@ class Cornish2021(BaseModel):
         I = self.variables["Current [A]"]
         
         # set internal variables
-        S8 = pybamm.Variable("S8 [g]")
-        S4 = pybamm.Variable("S4 [g]")
-        S2 = pybamm.Variable("S2 [g]")
-        S = pybamm.Variable("S [g]")
-        Sp = pybamm.Variable("Precipitated Sulfur [g]")
+        S8_exp = pybamm.Variable("S8 exp")
+        S4_exp = pybamm.Variable("S4 exp")
+        S2_exp = pybamm.Variable("S2 exp")
+        S_exp = pybamm.Variable("S exp")
+        Sp_exp = pybamm.Variable("Precipitated Sulfur exp")
+        ms = param.S8_initial + param.S4_initial + param.S2_initial + param.S_initial + param.Sp_initial
+        S8 = ms*pybamm.exp(-S8_exp)
+        S4 = ms*pybamm.exp(-S4_exp)
+        S2 = ms*pybamm.exp(-S2_exp)
+        S = ms*pybamm.exp(-S_exp)
+        Sp = ms*pybamm.exp(-Sp_exp)
 
         #######################################
         # Model parameters
         #######################################
-        from .parameters.cornish2021_parameters import Cornish2021Parameters
-        self.param = Cornish2021Parameters()
-        param = self.param
+        
 
         # standard parameters
         R = param.R
@@ -70,7 +76,6 @@ class Cornish2021(BaseModel):
         S_star = param.S_star
         k_s_charge = param.k_s_charge
         k_s_discharge = param.k_s_discharge
-        
         
         # parameters derived from other parameters
         nH = 1
@@ -145,8 +150,15 @@ class Cornish2021(BaseModel):
 
         # Differential equation (8e) in [1]
         dSpdt = k_pd * Sp * (S - S_star) / (v * rho_s)
+        
+        
+        dS8_expdt = dS8dt*(S8/ms)
+        dS4_expdt = dS4dt*(S4/ms)
+        dS2_expdt = dS2dt*(S2/ms)
+        dS_expdt = dSdt*(S/ms)
+        dSp_expdt = dSpdt*(Sp/ms)
 
-        self.rhs.update({S8: dS8dt, S4: dS4dt, S2: dS2dt, S: dSdt, Sp: dSpdt})
+        self.rhs.update({S8_exp: dS8_expdt, S4_exp: dS4_expdt, S2_exp: dS2_expdt, S_exp: dS_expdt, Sp_exp: dSp_expdt})
 
         ##############################
         # Model variables
@@ -161,6 +173,11 @@ class Cornish2021(BaseModel):
                 "S2 [g]": S2,
                 "S [g]": S,
                 "Precipitated Sulfur [g]": Sp,
+                "S8 exp": S8_exp,
+                "S4 exp": S4_exp,
+                "S2 exp": S2_exp,
+                "S exp": S_exp,
+                "Precipitated Sulfur exp": Sp_exp,
                 "Shuttle coefficient [s-1]": k_s,
                 "Shuttle rate [g-1.s-1]": k_s * S8,
                 "High plateau potential [V]": E_H,
@@ -186,11 +203,11 @@ class Cornish2021(BaseModel):
 
         self.initial_conditions.update(
             {
-                self.variables["S8 [g]"]: param.S8_initial,
-                self.variables["S4 [g]"]: param.S4_initial,
-                self.variables["S2 [g]"]: param.S2_initial,
-                self.variables["S [g]"]: param.S_initial,
-                self.variables["Precipitated Sulfur [g]"]: param.Sp_initial,
+                self.variables["S8 exp"]: -pybamm.log(param.S8_initial/ms),
+                self.variables["S4 exp"]: -pybamm.log(param.S4_initial/ms),
+                self.variables["S2 exp"]: -pybamm.log(param.S2_initial/ms),
+                self.variables["S exp"]: -pybamm.log(param.S_initial/ms),
+                self.variables["Precipitated Sulfur exp"]: -pybamm.log(param.Sp_initial/ms),
                 self.variables['Terminal voltage [V]']: param.V_initial
             }
         )
