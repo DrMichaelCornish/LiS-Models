@@ -141,7 +141,7 @@ class Cornish2021(BaseModel):
         dS2dt = ns4 * Ms * i_M / (nM * F) - (ns2 * Ms * i_L / (nM * F)) 
 
         # Differential equation (8d) in [1]
-        dSdt = (ns2 * Ms * i_L / (nM * F)) - k_p * Sp * (S - S_star) / (v * rho_s)
+        dSdt = (ns2 * Ms * i_L / (nM * F)) - k_pd * Sp * (S - S_star) / (v * rho_s)
 
         # Differential equation (8e) in [1]
         dSpdt = k_pd * Sp * (S - S_star) / (v * rho_s)
