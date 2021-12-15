@@ -50,10 +50,7 @@ class Cornish2021Parameters:
         self.v = pybamm.Parameter("Electrolyte volume per cell [L]")
         self.ar = pybamm.Parameter("Active reaction area per cell [m2]")
         self.k_p = pybamm.Parameter("Precipitation rate [s-1]")
-<<<<<<< HEAD
         self.k_d = pybamm.Parameter("Dissolution rate [s-1]")
-=======
->>>>>>> master
         self.S_star = pybamm.Parameter("S saturation mass [g]")
         self.k_s_charge = pybamm.Parameter(
             "Shuttle rate coefficient during charge [s-1]"
@@ -76,10 +73,4 @@ class Cornish2021Parameters:
         self.Sp_initial = pybamm.Parameter(
             "Initial Condition for Precipitated Sulfur [g]"
         )
-        
-        
-<<<<<<< HEAD
-        
-=======
->>>>>>> master
         

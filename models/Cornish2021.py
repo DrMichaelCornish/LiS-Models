@@ -18,11 +18,7 @@ class Cornish2021(BaseModel):
         The name of the model.
     """
 
-<<<<<<< HEAD:models/Cornish2021.py
-    def __init__(self, options = None, temp_control = 30, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
-=======
     def __init__(self, options=None, name="Cornish & Marinescu (2021) Zero Dimensional Model"):
->>>>>>> master:models/ZeroD_Cornish_type.py
         super().__init__(options, name)
         
         # citations
@@ -217,35 +213,11 @@ class Cornish2021(BaseModel):
                 pybamm.EventType.TERMINATION,
             )
         )
-<<<<<<< HEAD:models/Cornish2021.py
-        
-        
-        self.temp_control = temp_control
-    @property
-    def default_parameter_values(self):
-        
-        if self.temp_control == 20:
-            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_20.csv"
-        elif self.temp_control == 30:
-            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_30.csv"
-        elif self.temp_control == 40:
-            file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters_40.csv"
-        else:
-            print('No defined standard parameter set for temperature control value of {} [C]'.format(temp_control))
-            
-        #file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
-=======
-        #self.events.append(
-        #    pybamm.Event(
-        #        "Zero theoretical capacity", cth - tol, pybamm.EventType.TERMINATION
-        #    )
-        #)
-        
+
     @property
     def default_parameter_values(self):
         # TODO: separate parameters out by component and create a parameter set
         # that can be called (see pybamm/parameters/parameter_sets.py)
         file = "models/inputs/parameters/lithium-sulfur/cornish2021_parameters.csv"
->>>>>>> master:models/ZeroD_Cornish_type.py
         values_path = pybamm.get_parameters_filepath(file)
         return pybamm.ParameterValues(values=values_path)

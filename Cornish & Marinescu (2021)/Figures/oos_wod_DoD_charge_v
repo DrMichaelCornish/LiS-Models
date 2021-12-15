@@ -1,0 +1,46 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Title: oos_wod_DoD_charge_v
+%%Creator: Matplotlib v3.4.2, https://matplotlib.org/
+%%CreationDate: Wed Dec 15 14:45:03 2021
+%%Orientation: portrait
+%%BoundingBox: -126 108 738 684
+%%HiResBoundingBox: -126.000000 108.000000 738.000000 684.000000
+%%EndComments
+%%BeginProlog
+/mpldict 10 dict def
+mpldict begin
+/_d { bind def } bind def
+/m { moveto } _d
+/l { lineto } _d
+/r { rlineto } _d
+/c { curveto } _d
+/cl { closepath } _d
+/ce { closepath eofill } _d
+/box {
+      m
+      1 index 0 r
+      0 exch r
+      neg 0 r
+      cl
+    } _d
+/clipbox {
+      box
+      clip
+      newpath
+    } _d
+/sc { setcachedevice } _d
+end
+%%EndProlog
+mpldict begin
+-126 108 translate
+864 576 0 0 clipbox
+gsave
+0 0 m
+864 0 l
+864 576 l
+0 576 l
+cl
+grestore
+
+end
+showpage
