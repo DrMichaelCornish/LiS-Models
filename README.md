@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/397249594.svg)](https://zenodo.org/badge/latestdoi/397249594)
+
 # LiS-Models
 The models used in published research by Michael Cornish will be made available here. Incorporation with the official PyBaMM library will come at a later date. 
 
